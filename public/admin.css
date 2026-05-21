@@ -1,0 +1,180 @@
+:root {
+  color-scheme: light;
+}
+
+body {
+  margin: 0;
+  font-family: Inter, system-ui, sans-serif;
+  background: #f8f4f9;
+  color: #2a0e24;
+}
+
+.admin-shell {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.admin-header h1 {
+  margin: 0 0 0.25rem;
+  font-size: 2.25rem;
+}
+
+.admin-header p {
+  margin: 0;
+  color: #6b526d;
+}
+
+.admin-main {
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: 1.2fr 1fr;
+}
+
+.admin-form-card,
+.admin-list-card {
+  background: white;
+  border-radius: 1rem;
+  box-shadow: 0 18px 50px rgba(45, 19, 59, 0.08);
+  padding: 1.75rem;
+}
+
+.admin-form label {
+  display: block;
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+  color: #4d2b4f;
+}
+
+.admin-form input,
+.admin-form textarea,
+.admin-form select {
+  display: block;
+  width: 100%;
+  padding: 0.9rem 1rem;
+  border-radius: 0.85rem;
+  border: 1px solid #e9d8ef;
+  background: #fcf7fb;
+  margin-top: 0.5rem;
+  font: inherit;
+}
+
+.admin-form textarea {
+  resize: vertical;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.9rem 1.3rem;
+  border-radius: 999px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+
+.btn-primary {
+  background: #be185d;
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #99154f;
+}
+
+.btn-outline {
+  background: white;
+  color: #2a0e24;
+  border-color: #d9b8d3;
+}
+
+.admin-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.project-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.project-card {
+  border: 1px solid #edd8ec;
+  border-radius: 1rem;
+  padding: 1rem;
+  background: #fff;
+}
+
+.project-card h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1.1rem;
+}
+
+.project-card p {
+  margin: 0 0 0.75rem;
+  color: #6b526d;
+  line-height: 1.5;
+}
+
+.project-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.75rem;
+  color: #8c5a83;
+  font-size: 0.9rem;
+}
+
+.project-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.project-actions button {
+  border-radius: 999px;
+  border: 1px solid #e9d8ef;
+  padding: 0.55rem 0.85rem;
+  background: #faf5ff;
+  cursor: pointer;
+}
+
+.project-actions button:hover {
+  background: #f5e7f5;
+}
+
+.project-tag {
+  display: inline-flex;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  background: #f7e7f7;
+  font-size: 0.8rem;
+  color: #8c5a83;
+  margin-right: 0.35rem;
+  margin-bottom: 0.35rem;
+}
+
+@media (max-width: 900px) {
+  .admin-main {
+    grid-template-columns: 1fr;
+  }
+}

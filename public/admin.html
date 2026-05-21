@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Panel</title>
+  <link rel="stylesheet" href="/admin.css" />
+</head>
+<body>
+  <div class="admin-shell">
+    <header class="admin-header">
+      <div>
+        <h1>Admin Panel</h1>
+        <p>Manage your portfolio projects with plain HTML and basic JavaScript.</p>
+      </div>
+      <a class="btn btn-primary" href="/">Back to site</a>
+    </header>
+
+    <main class="admin-main">
+      <section class="admin-form-card">
+        <h2 id="form-title">Add Project</h2>
+        <form id="project-form" class="admin-form">
+          <label>
+            Title
+            <input type="text" id="project-title" required placeholder="Project title" />
+          </label>
+          <label>
+            Category
+            <select id="project-category">
+              <option value="Web App">Web App</option>
+              <option value="Mobile">Mobile</option>
+              <option value="Design">Design</option>
+              <option value="Other">Other</option>
+            </select>
+          </label>
+          <label>
+            Tags (comma separated)
+            <input type="text" id="project-tags" placeholder="React, Design, UI" />
+          </label>
+          <label>
+            Cover Image URL
+            <input type="url" id="project-image" required placeholder="https://images.unsplash.com/..." />
+          </label>
+          <label>
+            Description
+            <textarea id="project-description" rows="4" required placeholder="Describe this project..."></textarea>
+          </label>
+          <div class="form-actions">
+            <button type="button" id="cancel-edit" class="btn btn-outline">Cancel</button>
+            <button type="submit" class="btn btn-primary">Save Project</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="admin-list-card">
+        <div class="admin-list-header">
+          <h2>Project List</h2>
+          <span id="total-count"></span>
+        </div>
+        <div id="project-list" class="project-list"></div>
+      </section>
+    </main>
+  </div>
+
+  <script src="/admin.js"></script>
+</body>
+</html>

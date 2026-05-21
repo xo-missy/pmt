@@ -1,0 +1,32 @@
+.about-content {
+  margin-top: 2rem;
+  display: grid;
+  gap: 1.5rem;
+}
+
+.about-card {
+  padding: 2rem;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(236, 72, 153, 0.06), rgba(217, 70, 239, 0.06));
+  margin-bottom: 2rem;
+  line-height: 1.8;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.feature-card {
+  padding: 1.5rem;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.feature-icon {
+  color: var(--accent);
+  margin-bottom: 1rem;
+}

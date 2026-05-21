@@ -1,0 +1,43 @@
+.dashboard {
+  padding-top: 2rem;
+}
+
+.section-title {
+  font-size: 2.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.dashboard-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+  margin-bottom: 3rem;
+}
+
+.dashboard-card {
+  padding: 1.5rem;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.dashboard-highlight {
+  padding: 1.5rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+}
+
+.dashboard-activity {
+  padding: 1.5rem;
+  border-radius: 12px;
+}
+
+.stat-value { font-size: 2rem; font-weight: 700; }
+.stat-0 { color: var(--primary); }
+.stat-1 { color: #FFD700; }
+.stat-2 { color: var(--accent); }
+.stat-3 { color: #00D4FF; }
