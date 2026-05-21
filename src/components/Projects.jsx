@@ -1,7 +1,7 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import { FaExternalLinkAlt, FaSearch } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
+const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? 'http://localhost:4000' : '/_/backend');
 import './Projects.css';
 
 export default function Projects() {

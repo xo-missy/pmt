@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './Admin.css';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
+const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? 'http://localhost:4000' : '/_/backend');
 const CATEGORIES = ['Web App', 'Mobile', 'Design', 'Analytics', 'Games', 'Dev Ops', 'Other'];
 
 export default function Admin() {
