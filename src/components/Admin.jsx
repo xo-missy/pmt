@@ -4,6 +4,51 @@ import './Admin.css';
 const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? 'http://localhost:4000' : '/_/backend');
 const CATEGORIES = ['Web App', 'Mobile', 'Design', 'Analytics', 'Games', 'Dev Ops', 'Other'];
 
+const CATEGORY_CONFIGS = {
+  'Web App': {
+    urlLabel: 'Live Website URL',
+    urlRequired: true,
+    placeholder: 'e.g. https://myportfolio.com',
+    defaultImage: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&auto=format&fit=crop&q=80',
+  },
+  'Mobile': {
+    urlLabel: 'App Store / Play Store URL',
+    urlRequired: false,
+    placeholder: 'e.g. https://play.google.com/store/apps/... (optional)',
+    defaultImage: 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800&auto=format&fit=crop&q=80',
+  },
+  'Design': {
+    urlLabel: 'Figma / Behance / Dribbble URL',
+    urlRequired: false,
+    placeholder: 'e.g. https://figma.com/file/... (optional)',
+    defaultImage: 'https://images.unsplash.com/photo-1561070791-26c113006238?w=800&auto=format&fit=crop&q=80',
+  },
+  'Analytics': {
+    urlLabel: 'Dashboard or Report URL',
+    urlRequired: false,
+    placeholder: 'e.g. https://public.tableau.com/... (optional)',
+    defaultImage: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&auto=format&fit=crop&q=80',
+  },
+  'Games': {
+    urlLabel: 'Playable Game URL',
+    urlRequired: true,
+    placeholder: 'e.g. https://itch.io/games/...',
+    defaultImage: 'https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=800&auto=format&fit=crop&q=80',
+  },
+  'Dev Ops': {
+    urlLabel: 'Repository / Deployment URL',
+    urlRequired: false,
+    placeholder: 'e.g. https://github.com/... (optional)',
+    defaultImage: 'https://images.unsplash.com/photo-1618401471353-b98aedd07871?w=800&auto=format&fit=crop&q=80',
+  },
+  'Other': {
+    urlLabel: 'Project Link',
+    urlRequired: false,
+    placeholder: 'e.g. https://github.com/... (optional)',
+    defaultImage: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&auto=format&fit=crop&q=80',
+  },
+};
+
 export default function Admin() {
   const [projects, setProjects] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -72,6 +117,20 @@ export default function Admin() {
     event.preventDefault();
     try {
       setLoading(true);
+
+      let formattedUrl = formData.url ? formData.url.trim() : '';
+      if (formattedUrl && !/^https?:\/\//i.test(formattedUrl)) {
+        formattedUrl = 'https://' + formattedUrl;
+      }
+
+      const config = CATEGORY_CONFIGS[formData.category] || CATEGORY_CONFIGS['Other'];
+      let finalImageUrl = '';
+      if (formattedUrl) {
+        finalImageUrl = `https://image.thum.io/get/width/1280/crop/800/${formattedUrl}`;
+      } else {
+        finalImageUrl = config.defaultImage;
+      }
+
       const projectData = {
         title: formData.title,
         description: formData.description,
@@ -80,9 +139,10 @@ export default function Admin() {
           typeof formData.tags === 'string'
             ? formData.tags.split(',').map((t) => t.trim()).filter(Boolean)
             : formData.tags,
-        image: formData.image,
-        url: formData.url,
+        image: finalImageUrl,
+        url: formattedUrl,
       };
+
       const token = localStorage.getItem('token');
       if (editingProject) {
         const id = editingProject._id || editingProject.id;
@@ -111,6 +171,8 @@ export default function Admin() {
       setLoading(false);
     }
   };
+
+  const currentConfig = CATEGORY_CONFIGS[formData.category] || CATEGORY_CONFIGS['Other'];
 
   return (
     <section className="admin-simple">
@@ -155,20 +217,83 @@ export default function Admin() {
           <div className="modal-content">
             <h2>{editingProject ? 'Edit Project' : 'New Project'}</h2>
             <form onSubmit={saveProject}>
-              <label>Title<input value={formData.title} onChange={(e) => setFormData({ ...formData, title: e.target.value })} required disabled={loading} /></label>
-              <label>
-                Category
-                <select value={formData.category} onChange={(e) => setFormData({ ...formData, category: e.target.value })} disabled={loading}>
-                  {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
-                </select>
-              </label>
-              <label>Tags (comma separated)<input value={Array.isArray(formData.tags) ? formData.tags.join(', ') : formData.tags} onChange={(e) => setFormData({ ...formData, tags: e.target.value })} disabled={loading} /></label>
-              <label>Image URL<input value={formData.image} onChange={(e) => setFormData({ ...formData, image: e.target.value })} required disabled={loading} /></label>
-              <label>Live URL<input value={formData.url} onChange={(e) => setFormData({ ...formData, url: e.target.value })} disabled={loading} /></label>
-              <label>Description<textarea rows={4} value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} required disabled={loading} /></label>
-              <div className="form-actions">
-                <button type="button" className="btn btn-outline" onClick={() => setIsModalOpen(false)} disabled={loading}>Cancel</button>
-                <button type="submit" className="btn btn-primary" disabled={loading}>{loading ? 'Saving...' : 'Save'}</button>
+              <div className="form-group">
+                <label htmlFor="title">Title</label>
+                <input
+                  id="title"
+                  type="text"
+                  placeholder="e.g. Portfolio Management Tool"
+                  value={formData.title}
+                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                  required
+                  disabled={loading}
+                />
+              </div>
+
+              <div className="form-row">
+                <div className="form-group">
+                  <label htmlFor="category">Category</label>
+                  <select
+                    id="category"
+                    value={formData.category}
+                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                    disabled={loading}
+                  >
+                    {CATEGORIES.map((c) => (
+                      <option key={c} value={c}>{c}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="tags">Tags (comma separated)</label>
+                  <input
+                    id="tags"
+                    type="text"
+                    placeholder="e.g. React, Express, MongoDB"
+                    value={Array.isArray(formData.tags) ? formData.tags.join(', ') : formData.tags}
+                    onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
+                    disabled={loading}
+                  />
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="url">
+                  {currentConfig.urlLabel}
+                  {currentConfig.urlRequired && <span style={{ color: 'var(--primary)', marginLeft: '4px' }}>*</span>}
+                </label>
+                <input
+                  id="url"
+                  type="text"
+                  placeholder={currentConfig.placeholder}
+                  value={formData.url || ''}
+                  onChange={(e) => setFormData({ ...formData, url: e.target.value })}
+                  required={currentConfig.urlRequired}
+                  disabled={loading}
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="description">Description</label>
+                <textarea
+                  id="description"
+                  rows={4}
+                  placeholder="Detailed description of the project, features, and challenges..."
+                  value={formData.description}
+                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                  required
+                  disabled={loading}
+                />
+              </div>
+
+              <div className="modal-footer">
+                <button type="button" className="btn btn-outline" onClick={() => setIsModalOpen(false)} disabled={loading}>
+                  Cancel
+                </button>
+                <button type="submit" className="btn btn-primary" disabled={loading}>
+                  {loading ? 'Saving...' : 'Save'}
+                </button>
               </div>
             </form>
           </div>

@@ -27,7 +27,7 @@ export default function Navbar({ theme, toggleTheme, token, onLogout }) {
         )}
 
         <div className="nav-actions">
-          <button className="btn btn-outline icon-btn" onClick={toggleTheme} aria-label="Toggle Theme">
+          <button className="btn btn-outline icon-btn" onClick={toggleTheme} aria-label="Toggle Theme" title="Toggle Light/Dark Theme">
             {theme === 'light' ? <FaMoon size={18} /> : <FaSun size={18} />}
           </button>
 
@@ -36,11 +36,8 @@ export default function Navbar({ theme, toggleTheme, token, onLogout }) {
               <div className="user-badge hide-mobile" title={userEmail}>
                 {userEmail.split('@')[0]}
               </div>
-              <button className="btn btn-outline logout-btn hide-mobile" onClick={() => { closeMenu(); onLogout(); }} title="Logout">
-                <FaSignOutAlt size={16} /> Logout
-              </button>
-              <button className="btn btn-outline logout-btn mobile-only-logout" onClick={() => { closeMenu(); onLogout(); }} title="Logout">
-                <FaSignOutAlt size={16} />
+              <button className="btn btn-outline logout-btn" onClick={() => { closeMenu(); onLogout(); }} title="Logout">
+                <FaSignOutAlt size={16} /> <span className="hide-mobile">Logout</span>
               </button>
               <button className="hamburger" onClick={handleToggle} aria-label="Toggle Menu">
                 {isOpen ? <FaTimes size={22} /> : <FaBars size={22} />}

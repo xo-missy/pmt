@@ -204,6 +204,12 @@
   max-width: 600px;
   border-radius: 1.5rem;
   padding: 2.5rem;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow);
+  color: var(--text-main);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
 
 .modal-header {

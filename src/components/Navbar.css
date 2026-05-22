@@ -91,15 +91,6 @@
   gap: 0.4rem;
 }
 
-.mobile-only-logout {
-  display: none;
-  width: 40px;
-  height: 40px;
-  padding: 0;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-}
 
 .hamburger {
   display: none;
@@ -125,8 +116,14 @@
     justify-content: center;
   }
 
-  .mobile-only-logout {
+  .logout-btn {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border-radius: 50%;
     display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .nav-links {
