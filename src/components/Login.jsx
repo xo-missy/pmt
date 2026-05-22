@@ -24,18 +24,22 @@ export default function Login({ onLogin }) {
         body: JSON.stringify({ email, password }),
       });
 
-      const data = await res.json();
+      // FIXED: guard against non-JSON responses
+      let data;
+      try {
+        data = await res.json();
+      } catch {
+        throw new Error('Server error. Could not connect to backend.');
+      }
+
       if (!res.ok) {
         throw new Error(data?.error || 'Login failed. Please verify credentials.');
       }
 
       localStorage.setItem('token', data.token);
       localStorage.setItem('userEmail', data.email);
-      
-      if (onLogin) {
-        onLogin(data.token);
-      }
-      
+
+      if (onLogin) onLogin(data.token);
       navigate('/');
     } catch (err) {
       console.error('Login error:', err);
@@ -97,20 +101,14 @@ export default function Login({ onLogin }) {
             </div>
           )}
 
-          <button
-            type="submit"
-            className="btn btn-primary auth-btn"
-            disabled={loading}
-          >
+          <button type="submit" className="btn btn-primary auth-btn" disabled={loading}>
             {loading ? 'Logging in...' : 'Log In'}
           </button>
         </form>
 
         <div className="auth-footer">
           Don't have an account yet?{' '}
-          <Link to="/signup" className="auth-link">
-            Create an account
-          </Link>
+          <Link to="/signup" className="auth-link">Create an account</Link>
         </div>
       </div>
     </div>

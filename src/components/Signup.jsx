@@ -36,18 +36,22 @@ export default function Signup({ onLogin }) {
         body: JSON.stringify({ email, password }),
       });
 
-      const data = await res.json();
+      // FIXED: guard against non-JSON responses
+      let data;
+      try {
+        data = await res.json();
+      } catch {
+        throw new Error('Server error. Could not connect to backend.');
+      }
+
       if (!res.ok) {
         throw new Error(data?.error || 'Registration failed. Try a different email.');
       }
 
       localStorage.setItem('token', data.token);
       localStorage.setItem('userEmail', data.email);
-      
-      if (onLogin) {
-        onLogin(data.token);
-      }
-      
+
+      if (onLogin) onLogin(data.token);
       navigate('/');
     } catch (err) {
       console.error('Signup error:', err);
@@ -126,20 +130,14 @@ export default function Signup({ onLogin }) {
             </div>
           )}
 
-          <button
-            type="submit"
-            className="btn btn-primary auth-btn"
-            disabled={loading}
-          >
+          <button type="submit" className="btn btn-primary auth-btn" disabled={loading}>
             {loading ? 'Creating account...' : 'Create Account'}
           </button>
         </form>
 
         <div className="auth-footer">
           Already have an account?{' '}
-          <Link to="/login" className="auth-link">
-            Log in instead
-          </Link>
+          <Link to="/login" className="auth-link">Log in instead</Link>
         </div>
       </div>
     </div>

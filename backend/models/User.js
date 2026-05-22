@@ -19,32 +19,28 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Hash password before saving
 userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
   this.password = await bcrypt.hash(this.password, 10);
   next();
 });
 
-// Compare plain password with hashed
 userSchema.methods.comparePassword = function (plain) {
   return bcrypt.compare(plain, this.password);
 };
 
 const MongooseUser = mongoose.model('User', userSchema);
 
-module.exports = new Proxy(MongooseUser, {
-  get(target, prop) {
-    if (global.useLocalDB) {
-      return require('./localDb').User[prop];
-    }
-    return target[prop];
+// FIXED: simple wrapper instead of fragile Proxy
+const User = {
+  findOne(...args) {
+    if (global.useLocalDB) return require('./localDb').User.findOne(...args);
+    return MongooseUser.findOne(...args);
   },
-  construct(target, args) {
-    if (global.useLocalDB) {
-      const LocalUserClass = require('./localDb').User;
-      return new LocalUserClass(...args);
-    }
-    return new target(...args);
-  }
-});
+  create(...args) {
+    if (global.useLocalDB) return require('./localDb').User.create(...args);
+    return MongooseUser.create(...args);
+  },
+};
+
+module.exports = User;
