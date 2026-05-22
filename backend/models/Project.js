@@ -14,4 +14,20 @@ const projectSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model('Project', projectSchema);
+const MongooseProject = mongoose.model('Project', projectSchema);
+
+module.exports = new Proxy(MongooseProject, {
+  get(target, prop) {
+    if (global.useLocalDB) {
+      return require('./localDb').Project[prop];
+    }
+    return target[prop];
+  },
+  construct(target, args) {
+    if (global.useLocalDB) {
+      const LocalProjectClass = require('./localDb').Project;
+      return new LocalProjectClass(...args);
+    }
+    return new target(...args);
+  }
+});

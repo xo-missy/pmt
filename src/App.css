@@ -10,28 +10,11 @@
   -webkit-text-fill-color: transparent;
 }
 
-.header {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  padding: 1rem 0;
-  border-bottom: 1px solid var(--glass-border);
-}
-
-.header .container {
+.main-content {
+  padding-top: 85px; /* Offset for the fixed navigation bar */
+  flex-grow: 1;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.logo {
-  font-family: var(--font-heading);
-  font-size: 1.5rem;
-  font-weight: 800;
-  background: linear-gradient(135deg, var(--primary), var(--accent));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  letter-spacing: -0.02em;
+  flex-direction: column;
 }
 
 .footer {

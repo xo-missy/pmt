@@ -31,4 +31,20 @@ userSchema.methods.comparePassword = function (plain) {
   return bcrypt.compare(plain, this.password);
 };
 
-module.exports = mongoose.model('User', userSchema);
+const MongooseUser = mongoose.model('User', userSchema);
+
+module.exports = new Proxy(MongooseUser, {
+  get(target, prop) {
+    if (global.useLocalDB) {
+      return require('./localDb').User[prop];
+    }
+    return target[prop];
+  },
+  construct(target, args) {
+    if (global.useLocalDB) {
+      const LocalUserClass = require('./localDb').User;
+      return new LocalUserClass(...args);
+    }
+    return new target(...args);
+  }
+});

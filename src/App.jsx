@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar.jsx';
 import Home from './components/Home.jsx';
 import Projects from './components/Projects.jsx';
 import Dashboard from './components/Dashboard.jsx';
 import About from './components/About.jsx';
 import Admin from './components/Admin.jsx';
+import Login from './components/Login.jsx';
+import Signup from './components/Signup.jsx';
 import Footer from './components/Footer.jsx';
 import './App.css';
 import './Shared.css';
@@ -15,6 +17,10 @@ function App() {
     return localStorage.getItem('theme') || 'dark';
   });
 
+  const [token, setToken] = useState(() => {
+    return localStorage.getItem('token') || null;
+  });
+
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('theme', theme);
@@ -22,21 +28,46 @@ function App() {
 
   const toggleTheme = () => setTheme(prev => prev === 'light' ? 'dark' : 'light');
 
+  const handleLogin = (newToken) => {
+    setToken(newToken);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('userEmail');
+    setToken(null);
+  };
+
   return (
     <Router>
       <div className="app">
         <Navbar 
           theme={theme} 
           toggleTheme={toggleTheme} 
+          token={token}
+          onLogout={handleLogout}
         />
         <main className="main-content">
           <div className="container">
             <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/projects" element={<Projects />} />
-              <Route path="/admin" element={<Admin />} />
-              <Route path="/about" element={<About />} />
+              {token ? (
+                <>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/dashboard" element={<Dashboard />} />
+                  <Route path="/projects" element={<Projects />} />
+                  <Route path="/admin" element={<Admin />} />
+                  <Route path="/about" element={<About />} />
+                  <Route path="/login" element={<Navigate to="/" replace />} />
+                  <Route path="/signup" element={<Navigate to="/" replace />} />
+                  <Route path="*" element={<Navigate to="/" replace />} />
+                </>
+              ) : (
+                <>
+                  <Route path="/login" element={<Login onLogin={handleLogin} />} />
+                  <Route path="/signup" element={<Signup onLogin={handleLogin} />} />
+                  <Route path="*" element={<Navigate to="/login" replace />} />
+                </>
+              )}
             </Routes>
           </div>
         </main>

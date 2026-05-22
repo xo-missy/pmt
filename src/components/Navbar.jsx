@@ -1,28 +1,52 @@
-import React from 'react';
-import { FaSun, FaMoon } from 'react-icons/fa';
+import React, { useState } from 'react';
+import { FaSun, FaMoon, FaBars, FaTimes, FaSignOutAlt } from 'react-icons/fa';
 import { Link, useLocation } from 'react-router-dom';
 import './Navbar.css';
 
-export default function Navbar({ theme, toggleTheme }) {
+export default function Navbar({ theme, toggleTheme, token, onLogout }) {
   const location = useLocation();
-  
+  const [isOpen, setIsOpen] = useState(false);
+  const userEmail = localStorage.getItem('userEmail') || '';
+
+  const handleToggle = () => setIsOpen(!isOpen);
+  const closeMenu = () => setIsOpen(false);
+
   return (
     <header className="header glass">
-      <div className="container">
-        <Link to="/" className="logo">P-M-T.</Link>
+      <div className="container header-container">
+        <Link to="/" className="logo" onClick={closeMenu}>P-M-T.</Link>
         
-        <nav className="nav-links">
-          <Link to="/" className={`nav-link ${location.pathname === '/' ? 'active' : ''}`}>Home</Link>
-          <Link to="/dashboard" className={`nav-link ${location.pathname === '/dashboard' ? 'active' : ''}`}>Dashboard</Link>
-          <Link to="/projects" className={`nav-link ${location.pathname === '/projects' ? 'active' : ''}`}>Projects</Link>
-          <Link to="/about" className={`nav-link ${location.pathname === '/about' ? 'active' : ''}`}>About</Link>
-          <Link to="/admin" className={`nav-link ${location.pathname === '/admin' ? 'active' : ''}`}>Admin</Link>
-        </nav>
+        {token && (
+          <nav className={`nav-links ${isOpen ? 'mobile-open' : ''}`}>
+            <Link to="/" className={`nav-link ${location.pathname === '/' ? 'active' : ''}`} onClick={closeMenu}>Home</Link>
+            <Link to="/dashboard" className={`nav-link ${location.pathname === '/dashboard' ? 'active' : ''}`} onClick={closeMenu}>Dashboard</Link>
+            <Link to="/projects" className={`nav-link ${location.pathname === '/projects' ? 'active' : ''}`} onClick={closeMenu}>Projects</Link>
+            <Link to="/about" className={`nav-link ${location.pathname === '/about' ? 'active' : ''}`} onClick={closeMenu}>About</Link>
+            <Link to="/admin" className={`nav-link ${location.pathname === '/admin' ? 'active' : ''}`} onClick={closeMenu}>Admin</Link>
+          </nav>
+        )}
 
         <div className="nav-actions">
           <button className="btn btn-outline icon-btn" onClick={toggleTheme} aria-label="Toggle Theme">
-            {theme === 'light' ? <FaMoon size={20} /> : <FaSun size={20} />}
+            {theme === 'light' ? <FaMoon size={18} /> : <FaSun size={18} />}
           </button>
+
+          {token && (
+            <>
+              <div className="user-badge hide-mobile" title={userEmail}>
+                {userEmail.split('@')[0]}
+              </div>
+              <button className="btn btn-outline logout-btn hide-mobile" onClick={() => { closeMenu(); onLogout(); }} title="Logout">
+                <FaSignOutAlt size={16} /> Logout
+              </button>
+              <button className="btn btn-outline logout-btn mobile-only-logout" onClick={() => { closeMenu(); onLogout(); }} title="Logout">
+                <FaSignOutAlt size={16} />
+              </button>
+              <button className="hamburger" onClick={handleToggle} aria-label="Toggle Menu">
+                {isOpen ? <FaTimes size={22} /> : <FaBars size={22} />}
+              </button>
+            </>
+          )}
         </div>
       </div>
     </header>

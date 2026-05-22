@@ -5,12 +5,6 @@ const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? 'http://l
 const CATEGORIES = ['Web App', 'Mobile', 'Design', 'Analytics', 'Games', 'Dev Ops', 'Other'];
 
 export default function Admin() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [authMode, setAuthMode] = useState('login');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [authError, setAuthError] = useState('');
-
   const [projects, setProjects] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingProject, setEditingProject] = useState(null);
@@ -25,40 +19,8 @@ export default function Admin() {
   });
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      setIsAuthenticated(true);
-      fetchProjects();
-    }
+    fetchProjects();
   }, []);
-
-  const handleAuth = async (e) => {
-    e.preventDefault();
-    setAuthError('');
-    try {
-      const endpoint = authMode === 'signup' ? '/auth/signup' : '/auth/login';
-      const res = await fetch(`${API_URL}${endpoint}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data?.error || 'Authentication failed');
-      localStorage.setItem('token', data.token);
-      setEmail('');
-      setPassword('');
-      setIsAuthenticated(true);
-      await fetchProjects();
-    } catch (err) {
-      setAuthError(err.message || 'Authentication error');
-    }
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    setIsAuthenticated(false);
-    setProjects([]);
-  };
 
   const fetchProjects = async () => {
     try {
@@ -150,34 +112,6 @@ export default function Admin() {
     }
   };
 
-  if (!isAuthenticated) {
-    return (
-      <section className="admin-login">
-        <div className="login-card">
-          <h1>{authMode === 'signup' ? 'Sign Up' : 'Login'}</h1>
-          <p>{authMode === 'signup' ? 'Create an account to manage projects.' : 'Log in to manage projects.'}</p>
-          <form onSubmit={handleAuth}>
-            <label>
-              Email
-              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" required autoFocus />
-            </label>
-            <label>
-              Password
-              <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Min. 6 characters" required />
-            </label>
-            {authError && <p className="error-message">{authError}</p>}
-            <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
-              <button type="submit" className="btn btn-primary">{authMode === 'signup' ? 'Sign Up' : 'Login'}</button>
-              <button type="button" className="btn btn-outline" onClick={() => { setAuthMode(authMode === 'signup' ? 'login' : 'signup'); setAuthError(''); }}>
-                {authMode === 'signup' ? 'Have an account? Log in' : "Don't have an account? Sign up"}
-              </button>
-            </div>
-          </form>
-        </div>
-      </section>
-    );
-  }
-
   return (
     <section className="admin-simple">
       <div className="admin-panel-header">
@@ -187,7 +121,6 @@ export default function Admin() {
         </div>
         <div className="header-actions">
           <button className="btn btn-primary" onClick={openNewProject} disabled={loading}>Add Project</button>
-          <button className="btn btn-outline" onClick={handleLogout}>Logout</button>
         </div>
       </div>
 
