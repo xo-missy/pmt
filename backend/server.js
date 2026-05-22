@@ -1,4 +1,10 @@
-require('dotenv').config();
+require('dotenv').config({ path: require('path').join(__dirname, '.env') });
+
+if (!process.env.JWT_SECRET) {
+  console.warn('WARNING: JWT_SECRET is not defined in environment variables. Falling back to a default secret. DO NOT USE IN PRODUCTION.');
+  process.env.JWT_SECRET = 'your_super_secret_key_change_this_default';
+}
+
 const mongoose = require('mongoose');
 const app = require('./app');
 const PORT = process.env.PORT || 4000;
