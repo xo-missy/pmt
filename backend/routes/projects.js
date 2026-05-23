@@ -3,10 +3,10 @@ const router = express.Router();
 const Project = require('../models/Project');
 const authenticate = require('../middleware/authenticate');
 
-// GET /projects — public, anyone can view
-router.get('/', async (req, res) => {
+// GET /projects — protected, get user's projects
+router.get('/', authenticate, async (req, res) => {
   try {
-    const projects = await Project.find().sort({ createdAt: -1 });
+    const projects = await Project.find({ userId: req.user.userId }).sort({ createdAt: -1 });
     // Return id as a string field alongside _id so the frontend works with both
     const formatted = projects.map((p) => ({
       ...p.toObject(),
@@ -26,7 +26,15 @@ router.post('/', authenticate, async (req, res) => {
 
     if (!title) return res.status(400).json({ error: 'Title is required.' });
 
-    const project = await Project.create({ title, description, category, tags, image, url });
+    const project = await Project.create({
+      userId: req.user.userId,
+      title,
+      description,
+      category,
+      tags,
+      image,
+      url
+    });
     res.status(201).json({ ...project.toObject(), id: project._id.toString() });
   } catch (err) {
     console.error('Create project error:', err);
@@ -39,15 +47,20 @@ router.put('/:id', authenticate, async (req, res) => {
   try {
     const { title, description, category, tags, image, url } = req.body;
 
-    const project = await Project.findByIdAndUpdate(
+    const project = await Project.findById(req.params.id);
+    if (!project) return res.status(404).json({ error: 'Project not found.' });
+
+    if (project.userId !== req.user.userId) {
+      return res.status(403).json({ error: 'Unauthorized to update this project.' });
+    }
+
+    const updated = await Project.findByIdAndUpdate(
       req.params.id,
       { title, description, category, tags, image, url },
       { new: true, runValidators: true }
     );
 
-    if (!project) return res.status(404).json({ error: 'Project not found.' });
-
-    res.json({ ...project.toObject(), id: project._id.toString() });
+    res.json({ ...updated.toObject(), id: updated._id.toString() });
   } catch (err) {
     console.error('Update project error:', err);
     res.status(500).json({ error: 'Failed to update project.' });
@@ -57,8 +70,14 @@ router.put('/:id', authenticate, async (req, res) => {
 // DELETE /projects/:id — protected
 router.delete('/:id', authenticate, async (req, res) => {
   try {
-    const project = await Project.findByIdAndDelete(req.params.id);
+    const project = await Project.findById(req.params.id);
     if (!project) return res.status(404).json({ error: 'Project not found.' });
+
+    if (project.userId !== req.user.userId) {
+      return res.status(403).json({ error: 'Unauthorized to delete this project.' });
+    }
+
+    await Project.findByIdAndDelete(req.params.id);
     res.json({ message: 'Project deleted successfully.' });
   } catch (err) {
     console.error('Delete project error:', err);

@@ -84,6 +84,7 @@ const LocalUser = {
 class LocalProjectDoc {
   constructor(data) {
     this._id = data._id || Math.random().toString(36).substring(2, 9) + Date.now().toString(36);
+    this.userId = data.userId;
     this.title = data.title;
     this.description = data.description || '';
     this.category = data.category || 'Other';
@@ -99,6 +100,7 @@ class LocalProjectDoc {
   toObject() {
     return {
       _id: this._id,
+      userId: this.userId,
       title: this.title,
       description: this.description,
       category: this.category,
@@ -114,10 +116,19 @@ class LocalProjectDoc {
 }
 
 const LocalProject = {
-  find() {
+  find(filter = {}) {
     const projects = readData(PROJECTS_FILE);
+    let filtered = projects.map(p => new LocalProjectDoc(p));
+    if (filter && typeof filter === 'object') {
+      filtered = filtered.filter(p => {
+        for (const key in filter) {
+          if (p[key] !== filter[key]) return false;
+        }
+        return true;
+      });
+    }
     const query = {
-      results: projects.map(p => new LocalProjectDoc(p)),
+      results: filtered,
       sort(criteria) {
         const key = Object.keys(criteria)[0];
         const dir = criteria[key]; // -1 or 1
@@ -135,6 +146,12 @@ const LocalProject = {
       }
     };
     return query;
+  },
+
+  async findById(id) {
+    const projects = readData(PROJECTS_FILE);
+    const found = projects.find(p => p._id === id);
+    return found ? new LocalProjectDoc(found) : null;
   },
 
   async create(data) {
