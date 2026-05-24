@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { FaEnvelope, FaLock, FaExclamationCircle, FaEye, FaEyeSlash } from 'react-icons/fa';
 import './Auth.css';
 
-const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? 'http://localhost:4000' : '/_/backend');
+const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? 'http://localhost:4000' : 'https://pmt-o5k7.onrender.com');
 
 export default function Login({ onLogin }) {
   const [email, setEmail] = useState('');

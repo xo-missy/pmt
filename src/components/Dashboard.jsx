@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? 'http://localhost:4000' : '/_/backend');
+const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? 'http://localhost:4000' : 'https://pmt-o5k7.onrender.com');
 import './Dashboard.css';
 
 export default function Dashboard() {
