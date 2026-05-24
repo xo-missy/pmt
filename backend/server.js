@@ -19,8 +19,14 @@ mongoose
     app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
   })
   .catch((err) => {
-    console.warn('MongoDB connection error. Falling back to local file-based database...');
-    console.warn(`Error details: ${err.message}`);
+    console.error('CRITICAL WARNING: MongoDB connection failed! Error details:', err.message);
+    console.warn('----------------------------------------------------------------------');
+    console.warn('FALLING BACK TO LOCAL FILE-BASED DATABASE.');
+    console.warn('WARNING: All data (users, projects) will be WIPED when this container');
+    console.warn('restarts, redeploys, or goes to sleep (common on Render free tier).');
+    console.warn('Please configure the MONGO_URI environment variable on your hosting');
+    console.warn('provider (e.g. Render) to point to a persistent MongoDB Atlas cluster.');
+    console.warn('----------------------------------------------------------------------');
     global.useLocalDB = true;
     app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT} (using local DB)`));
   });
