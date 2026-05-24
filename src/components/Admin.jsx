@@ -184,7 +184,7 @@ export default function Admin() {
       <div className="admin-panel-header">
         <div>
           <h1>Admin Panel</h1>
-          <p>Manage your projects via MongoDB.</p>
+          <p>Manage your projects.</p>
         </div>
         <div className="header-actions">
           <button className="btn btn-primary" onClick={openNewProject} disabled={loading}>Add Project</button>
