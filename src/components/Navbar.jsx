@@ -16,22 +16,24 @@ export default function Navbar({ theme, toggleTheme, token, onLogout }) {
       <div className="container header-container">
         <Link to="/" className="logo" onClick={closeMenu}>P-M-T.</Link>
         
-        {token && (
-          <nav className={`nav-links ${isOpen ? 'mobile-open' : ''}`}>
-            <Link to="/" className={`nav-link ${location.pathname === '/' ? 'active' : ''}`} onClick={closeMenu}>Home</Link>
-            <Link to="/dashboard" className={`nav-link ${location.pathname === '/dashboard' ? 'active' : ''}`} onClick={closeMenu}>Dashboard</Link>
-            <Link to="/projects" className={`nav-link ${location.pathname === '/projects' ? 'active' : ''}`} onClick={closeMenu}>Projects</Link>
-            <Link to="/about" className={`nav-link ${location.pathname === '/about' ? 'active' : ''}`} onClick={closeMenu}>About</Link>
-            <Link to="/admin" className={`nav-link ${location.pathname === '/admin' ? 'active' : ''}`} onClick={closeMenu}>Admin</Link>
-          </nav>
-        )}
+        <nav className={`nav-links ${isOpen ? 'mobile-open' : ''}`}>
+          <Link to="/" className={`nav-link ${location.pathname === '/' ? 'active' : ''}`} onClick={closeMenu}>Home</Link>
+          {token && <Link to="/dashboard" className={`nav-link ${location.pathname === '/dashboard' ? 'active' : ''}`} onClick={closeMenu}>Dashboard</Link>}
+          <Link to="/projects" className={`nav-link ${location.pathname === '/projects' ? 'active' : ''}`} onClick={closeMenu}>Projects</Link>
+          <Link to="/about" className={`nav-link ${location.pathname === '/about' ? 'active' : ''}`} onClick={closeMenu}>About</Link>
+          {token && <Link to="/admin" className={`nav-link ${location.pathname === '/admin' ? 'active' : ''}`} onClick={closeMenu}>Admin</Link>}
+        </nav>
 
         <div className="nav-actions">
           <button className="btn btn-outline icon-btn" onClick={toggleTheme} aria-label="Toggle Theme" title="Toggle Light/Dark Theme">
             {theme === 'light' ? <FaMoon size={18} /> : <FaSun size={18} />}
           </button>
 
-          {token && (
+          {!token ? (
+            <Link to="/login" className="btn btn-outline login-btn" onClick={closeMenu}>
+              Login
+            </Link>
+          ) : (
             <>
               <div className="user-badge hide-mobile" title={userEmail}>
                 {userEmail.split('@')[0]}
@@ -39,11 +41,12 @@ export default function Navbar({ theme, toggleTheme, token, onLogout }) {
               <button className="btn btn-outline logout-btn" onClick={() => { closeMenu(); onLogout(); }} title="Logout">
                 <FaSignOutAlt size={16} /> <span className="hide-mobile">Logout</span>
               </button>
-              <button className="hamburger" onClick={handleToggle} aria-label="Toggle Menu">
-                {isOpen ? <FaTimes size={22} /> : <FaBars size={22} />}
-              </button>
             </>
           )}
+
+          <button className="hamburger" onClick={handleToggle} aria-label="Toggle Menu">
+            {isOpen ? <FaTimes size={22} /> : <FaBars size={22} />}
+          </button>
         </div>
       </div>
     </header>

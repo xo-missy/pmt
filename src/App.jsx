@@ -50,22 +50,26 @@ function App() {
         <main className="main-content">
           <div className="container">
             <Routes>
-              {token ? (
-                <>
-                  <Route path="/" element={<Home />} />
-                  <Route path="/dashboard" element={<Dashboard />} />
-                  <Route path="/projects" element={<Projects />} />
-                  <Route path="/admin" element={<Admin />} />
-                  <Route path="/about" element={<About />} />
-                  <Route path="/login" element={<Navigate to="/" replace />} />
-                  <Route path="/signup" element={<Navigate to="/" replace />} />
-                  <Route path="*" element={<Navigate to="/" replace />} />
-                </>
-              ) : (
+              {/* Public Routes */}
+              <Route path="/" element={<Home />} />
+              <Route path="/projects" element={<Projects />} />
+              <Route path="/about" element={<About />} />
+
+              {!token ? (
                 <>
                   <Route path="/login" element={<Login onLogin={handleLogin} />} />
                   <Route path="/signup" element={<Signup onLogin={handleLogin} />} />
+                  <Route path="/dashboard" element={<Navigate to="/login" replace />} />
+                  <Route path="/admin" element={<Navigate to="/login" replace />} />
                   <Route path="*" element={<Navigate to="/login" replace />} />
+                </>
+              ) : (
+                <>
+                  <Route path="/dashboard" element={<Dashboard />} />
+                  <Route path="/admin" element={<Admin />} />
+                  <Route path="/login" element={<Navigate to="/" replace />} />
+                  <Route path="/signup" element={<Navigate to="/" replace />} />
+                  <Route path="*" element={<Navigate to="/" replace />} />
                 </>
               )}
             </Routes>

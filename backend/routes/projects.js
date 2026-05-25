@@ -3,10 +3,10 @@ const router = express.Router();
 const Project = require('../models/Project');
 const authenticate = require('../middleware/authenticate');
 
-// GET /projects — protected, get user's projects
-router.get('/', authenticate, async (req, res) => {
+// GET /projects — public, get all projects
+router.get('/', async (req, res) => {
   try {
-    const projects = await Project.find({ userId: req.user.userId }).sort({ createdAt: -1 });
+    const projects = await Project.find({}).sort({ createdAt: -1 });
     // Return id as a string field alongside _id so the frontend works with both
     const formatted = projects.map((p) => ({
       ...p.toObject(),
