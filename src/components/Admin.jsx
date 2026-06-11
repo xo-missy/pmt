@@ -63,9 +63,26 @@ export default function Admin() {
     url: '',
   });
 
+  const [dbWarning, setDbWarning] = useState(false);
+
   useEffect(() => {
     fetchProjects();
+    checkDatabaseStatus();
   }, []);
+
+  const checkDatabaseStatus = async () => {
+    try {
+      const res = await fetch(`${API_URL}/status`);
+      if (res.ok) {
+        const data = await res.json();
+        if (data.isEphemeral) {
+          setDbWarning(true);
+        }
+      }
+    } catch (error) {
+      console.error('Error checking database status:', error);
+    }
+  };
 
   const fetchProjects = async () => {
     try {
@@ -181,6 +198,19 @@ export default function Admin() {
 
   return (
     <section className="admin-simple">
+      {dbWarning && (
+        <div className="db-warning-banner glass">
+          <strong>⚠️ Ephemeral Database Active (Data Loss Risk)</strong>
+          <p>
+            The backend is currently running in temporary local database mode. 
+            Any projects you or your clients add will be <strong>permanently deleted</strong> when the server restarts, redeploys, or goes to sleep on Render.
+          </p>
+          <p>
+            To fix this and keep your projects forever, please configure the <code>MONGO_URI</code> environment variable in your Render database dashboard settings to point to your persistent MongoDB Atlas database cluster.
+          </p>
+        </div>
+      )}
+
       <div className="admin-panel-header">
         <div>
           <h1>Admin Panel</h1>

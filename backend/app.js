@@ -18,4 +18,13 @@ app.get('/', (req, res) => {
   res.json({ message: 'Portfolio API is running.' });
 });
 
+// Status & DB check
+app.get('/status', (req, res) => {
+  res.json({
+    status: 'running',
+    database: global.useLocalDB ? 'local' : 'mongodb',
+    isEphemeral: !!global.useLocalDB
+  });
+});
+
 module.exports = app;

@@ -185,3 +185,46 @@
   flex: 1;
 }
 
+.db-warning-banner {
+  padding: 1.5rem;
+  border-radius: var(--radius);
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  margin-bottom: 2rem;
+  color: var(--text-main);
+  text-align: left;
+}
+
+[data-theme='light'] .db-warning-banner {
+  background: rgba(239, 68, 68, 0.04);
+  border-color: rgba(239, 68, 68, 0.15);
+}
+
+.db-warning-banner strong {
+  display: block;
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+  color: #ef4444;
+}
+
+.db-warning-banner p {
+  font-size: 0.95rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.5;
+}
+
+.db-warning-banner p:last-child {
+  margin-bottom: 0;
+}
+
+.db-warning-banner code {
+  background: rgba(255, 255, 255, 0.08);
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  font-family: monospace;
+}
+
+[data-theme='light'] .db-warning-banner code {
+  background: rgba(0, 0, 0, 0.05);
+}
+
